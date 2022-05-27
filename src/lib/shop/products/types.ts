@@ -1,3 +1,5 @@
+import type { ShopProductType, ShopProductVariant } from '../types';
+
 export type Product = {
   id: string;
   name: string;
@@ -14,15 +16,7 @@ export type ProductSlim = Pick<Product, 'id' | 'name'> & {
 export type ProductOption = {
   id: string;
   amount: number;
-  variants: ProductVariant[];
-};
-
-export type ProductKind = 'color' | 'size';
-
-export type ProductVariant = {
-  label: string;
-  value: string;
-  kind: ProductKind;
+  variants: ShopProductVariant[];
 };
 
 export type ProductState = {
@@ -30,4 +24,4 @@ export type ProductState = {
   products: ProductSlim[];
 };
 
-export type ProductVariantSelection = Record<ProductKind, string>;
+export type ProductVariantSelection = Record<ShopProductType, string>;

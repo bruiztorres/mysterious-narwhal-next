@@ -1,12 +1,11 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { cartStore } from '$lib/shop/cart/store';
+
   import BagIcon from '../../../../static/icons/bag.svg';
-  //import { cartStore } from '../../shop/cart/store';
 
-  //$: count = $cartStore.cart.quantity;
+  $: count = $cartStore.cart.quantity;
   $: cartUrl = `${$page.url.pathname}#cart`;
-
-  const count = 0;
 </script>
 
 <header class="header">

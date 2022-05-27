@@ -4,7 +4,7 @@ import type { ProductSlim, Product } from './types';
 export class ProductMapper {
   static toProductSlim(document: ProductDocument): ProductSlim {
     return {
-      id: document._id,
+      id: document._id as string,
       name: document.name,
       amount: document.options[0].amount ?? 0,
       thumbnailUrl: document.images[0] ?? ''
@@ -13,7 +13,7 @@ export class ProductMapper {
 
   static toProductDetail(document: ProductDocument): Product {
     return {
-      id: document._id.toString(),
+      id: document._id as string,
       name: document.name,
       description: document.description,
       images: document.images,
@@ -21,13 +21,7 @@ export class ProductMapper {
         return {
           id: option._id?.toString() as string,
           amount: option.amount,
-          variants: option.variants.map((variant) => {
-            return {
-              kind: variant.kind,
-              value: variant.value,
-              label: variant.label
-            };
-          })
+          variants: option.variants
         };
       })
     };
