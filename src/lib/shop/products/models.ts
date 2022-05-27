@@ -1,4 +1,4 @@
-import { Schema, Model, Types, model, Document } from 'mongoose';
+import mongoose, { type Types, type Document, type Model } from 'mongoose';
 
 import type { Modify } from '$lib/core/types';
 import type { Product, ProductOption } from './types';
@@ -13,7 +13,7 @@ type ProductModel = Modify<
 
 export type ProductDocument = ProductModel & Document<string, unknown, ProductModel>;
 
-const schema = new Schema<ProductDocument, Model<ProductDocument>>({
+const schema = new mongoose.Schema<ProductDocument, Model<ProductDocument>>({
   name: String,
   description: String,
   images: [String],
@@ -31,4 +31,4 @@ const schema = new Schema<ProductDocument, Model<ProductDocument>>({
   ]
 });
 
-export default model('Product', schema);
+export default mongoose.model('Product', schema);
