@@ -8,7 +8,7 @@
   export let product: ProductSlim;
 </script>
 
-<a href={`/shop/products/${product.id}`} class="tile">
+<a href={`/shop/products/${product.id}`} class="tile" sveltekit:prefetch>
   <LazyImage src={AssetUrlResolver.content(product.thumbnailUrl)} alt="" />
 
   <div class="mt-1 mb-2">
