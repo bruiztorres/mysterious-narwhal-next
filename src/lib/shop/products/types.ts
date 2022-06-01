@@ -23,5 +23,3 @@ export type ProductState = {
   loaded: boolean;
   products: ProductSlim[];
 };
-
-export type ProductVariantSelection = Record<ShopProductType, string>;

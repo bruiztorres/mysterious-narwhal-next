@@ -4,29 +4,26 @@
 
 <script lang="ts">
   import Main from '$lib/core/layout/main.svelte';
-  import { AssetUrlResolver } from '$lib/core/asset';
   import LazyImage from '$lib/shared/lazy-image.svelte';
-  import type {
-    ProductOption,
-    ProductDetail,
-    ProductVariant,
-    ProductVariantSelection
-  } from '$lib/shop/products/types';
-
+  import { AssetUrlResolver } from '$lib/core/asset';
   import { toCurrency } from '$lib/shop/utils';
   import ProductOptionControl from '$lib/shop/products/shared/option.svelte';
+  import type { Product, ProductOption } from '$lib/shop/products/types';
+  import type { ShopProductType, ShopProductVariant } from '$lib/shop/types';
 
-  export let product: ProductDetail;
+  type ProductSelection = Record<ShopProductType, string>;
 
-  let sizes: ProductVariant[] = [];
-  let colors: ProductVariant[] = [];
-  let selection: ProductVariantSelection = { color: '', size: '' };
+  export let product: Product;
+
+  let sizes: ShopProductVariant[] = [];
+  let colors: ShopProductVariant[] = [];
+  let selection: ProductSelection = { color: '', size: '' };
 
   $: loadOptions(product.options);
 
   function getOptionFromSelection(
-    product: ProductDetail,
-    selection: ProductVariantSelection
+    product: Product,
+    selection: ProductSelection
   ): ProductOption | undefined {
     return product.options.find((option) => {
       return option.variants.every((variant) => {
@@ -52,10 +49,7 @@
     selection.color = colors[0]?.value;
   }
 
-  async function addToCart(
-    product: ProductDetail,
-    selection: ProductVariantSelection
-  ): Promise<void> {
+  async function addToCart(product: Product, selection: ProductSelection): Promise<void> {
     const option = getOptionFromSelection(product, selection);
 
     /*     await cartStore.addProduct({
@@ -69,7 +63,7 @@
     }); */
   }
 
-  function calcSelectionAmount(product: ProductDetail, selection: ProductVariantSelection): number {
+  function calcAmountFromSelection(product: Product, selection: ProductSelection): number {
     const option = getOptionFromSelection(product, selection) ?? { amount: 0 };
 
     return option.amount;
@@ -128,7 +122,7 @@
 
       <div class="my-4">
         <span class="fs-3">
-          {toCurrency(calcSelectionAmount(product, selection))}
+          {toCurrency(calcAmountFromSelection(product, selection))}
         </span>
         <small class="fs-6 fw-normal">*VAT included</small>
       </div>
