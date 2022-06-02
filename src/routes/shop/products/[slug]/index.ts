@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
+import { StatusCodes } from 'http-status-codes';
 
 import dbClient from '$lib/core/db';
-import { HttpStatusCode } from '$lib/core/http';
 import ProductModel from '$lib/shop/products/models';
 import { ProductMapper } from '$lib/shop/products/mappers';
 
@@ -20,7 +20,7 @@ export const get: RequestHandler = async ({ params }) => {
 
   if (!document) {
     return {
-      status: HttpStatusCode.NOT_FOUND,
+      status: StatusCodes.NOT_FOUND,
       error: `Resource with id: ${id} not found`
     };
   }

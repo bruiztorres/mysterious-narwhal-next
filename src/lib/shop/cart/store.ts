@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-// import { HttpError, HttpStatusCode } from '@core/http';
+// import { HttpError } from '@core/http';
 // import { LocalStorageService } from '@core/storage';
 // import { CartService } from './service';
 import type { Cart, CartProduct, CartState } from './types';
@@ -32,7 +32,7 @@ function createCartStore() {
 
     } catch (error) {
       if (error instanceof HttpError) {
-        if (error.statusCode === HttpStatusCode.NOT_FOUND) {
+        if (error.statusCode === StatusCodes.NOT_FOUND) {
           LocalStorageService.removeItem(cartlsKey);
           emptyLoadedState();
         }
