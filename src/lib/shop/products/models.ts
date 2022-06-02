@@ -13,22 +13,25 @@ type ProductModel = Modify<
 
 export type ProductDocument = ProductModel & Document<string, unknown, ProductModel>;
 
-const schema = new mongoose.Schema<ProductDocument, Model<ProductDocument>>({
-  name: String,
-  description: String,
-  images: [String],
-  options: [
-    {
-      amount: Number,
-      variants: [
-        {
-          kind: String,
-          value: String,
-          label: String
-        }
-      ]
-    }
-  ]
-});
+const schema = new mongoose.Schema<ProductDocument, Model<ProductDocument>>(
+  {
+    name: String,
+    description: String,
+    images: [String],
+    options: [
+      {
+        amount: Number,
+        variants: [
+          {
+            kind: String,
+            value: String,
+            label: String
+          }
+        ]
+      }
+    ]
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model('Product', schema);
