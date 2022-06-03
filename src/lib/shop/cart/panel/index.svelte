@@ -6,7 +6,8 @@
 </script>
 
 {#if $page.url.hash === '#cart'}
-  <SlidePanel href={$page.url.pathname}>
+  <!-- FIXME: Append empty hash to avoid page reload -->
+  <SlidePanel href={`${$page.url.pathname}#`}>
     <CartDetail />
   </SlidePanel>
 {/if}
