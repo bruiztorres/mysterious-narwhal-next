@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { StatusCodes } from 'http-status-codes';
 
-import CartModel from '$lib/shop/cart/models';
+import { CartModel } from '$lib/shop/cart/models';
 import { CartMapper } from '$lib/shop/cart/mappers';
 
 export const get: RequestHandler = async ({ params: { cartId } }) => {

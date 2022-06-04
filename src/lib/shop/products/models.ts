@@ -1,15 +1,12 @@
 import mongoose, { type Types, type Document, type Model } from 'mongoose';
 
-import type { Modify } from '$lib/core/types';
+import type { Modify, WithoutId } from '$lib/core/types';
 import type { Product, ProductOption } from './types';
 
-type ProductModel = Modify<
-  Omit<Product, 'id'>,
-  {
-    images: Types.Array<string>;
-    options: Types.DocumentArray<ProductOption>;
-  }
->;
+type ProductModel = Modify<WithoutId<Product>, {
+  options: Types.DocumentArray<ProductOption>;
+}>;
+
 
 export type ProductDocument = ProductModel & Document<string, unknown, ProductModel>;
 
@@ -34,4 +31,4 @@ const schema = new mongoose.Schema<ProductDocument, Model<ProductDocument>>(
   { timestamps: true }
 );
 
-export default mongoose.model('Product', schema);
+export const ProductModel = mongoose.model('Product', schema);

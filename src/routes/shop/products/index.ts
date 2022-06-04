@@ -1,21 +1,22 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-import dbClient from '$lib/core/db';
-import ProductModel from '$lib/shop/products/models';
+import type { PartialRecord } from '$lib/core/types';
+import type { Product } from '$lib/shop/products/types';
+import { dbConnect } from '$lib/core/db';
+import { ProductModel } from '$lib/shop/products/models';
 import { ProductMapper } from '$lib/shop/products/mappers';
 
-const projection = {
+const projection: PartialRecord<keyof Product, boolean> = {
   name: true,
   images: true,
   options: true
 };
 
 export const get: RequestHandler = async () => {
-  await dbClient();
+  await dbConnect();
 
-  const products = (await ProductModel.find({}, projection)).map((product) =>
-    ProductMapper.toProductSlim(product)
-  );
+  const docs = await ProductModel.find({}, projection);
+  const products = docs.map((product) => ProductMapper.toProductSlim(product));
 
   return { body: { products } };
 };

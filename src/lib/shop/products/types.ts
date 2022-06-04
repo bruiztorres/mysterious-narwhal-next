@@ -1,4 +1,4 @@
-import type { ShopProductType, ShopProductVariant } from '../types';
+import type { ShopProductVariant } from '../types';
 
 export type Product = {
   id: string;

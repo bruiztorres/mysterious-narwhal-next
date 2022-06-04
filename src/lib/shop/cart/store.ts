@@ -23,9 +23,7 @@ function createCartStore() {
   async function load(): Promise<void> {
     const cartId = LocalStorage.getItem(cartlsKey) as string;
 
-    if (!cartId) {
-      return emptyState();
-    }
+    if (!cartId) emptyState();
 
     try {
       const cart = await CartService.get(cartId);

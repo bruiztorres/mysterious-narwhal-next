@@ -1,11 +1,13 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { StatusCodes } from 'http-status-codes';
 
-import dbClient from '$lib/core/db';
-import ProductModel from '$lib/shop/products/models';
+import type { PartialRecord } from '$lib/core/types';
+import type { Product } from '$lib/shop/products/types';
+import { dbConnect } from '$lib/core/db';
+import { ProductModel } from '$lib/shop/products/models';
 import { ProductMapper } from '$lib/shop/products/mappers';
 
-const projection = {
+const projection: PartialRecord<keyof Product, boolean> = {
   name: true,
   description: true,
   images: true,
@@ -13,19 +15,19 @@ const projection = {
 };
 
 export const get: RequestHandler = async ({ params }) => {
-  await dbClient();
+  await dbConnect();
 
-  const id = params.slug;
-  const document = await ProductModel.findById(id, projection);
+  const productId = params.slug;
+  const doc = await ProductModel.findById(productId, projection);
 
-  if (!document) {
+  if (!doc) {
     return {
       status: StatusCodes.NOT_FOUND,
-      error: `Resource with id: ${id} not found`
+      error: `Resource with id: ${productId} not found`
     };
   }
 
-  const product = ProductMapper.toProductDetail(document);
+  const product = ProductMapper.toProductDetail(doc);
 
   return { body: { product } };
 };

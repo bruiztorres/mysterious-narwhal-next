@@ -1,15 +1,9 @@
-import mongoose from 'mongoose';
-import type { Types, Document, Model } from 'mongoose';
+import mongoose, { type Document, type Model } from 'mongoose';
 
-import type { Modify } from '$lib/core/types';
-import type { Cart, CartProduct } from './types';
+import type { WithoutId } from '$lib/core/types';
+import type { Cart } from './types';
 
-type CartModel = Modify<
-  Omit<Cart, 'id'>,
-  {
-    products: Types.DocumentArray<CartProduct>;
-  }
->;
+type CartModel = WithoutId<Cart>;
 
 export type CartDocument = CartModel & Document<string, unknown, CartModel>;
 
@@ -19,6 +13,7 @@ const schema = new mongoose.Schema<CartDocument, Model<CartDocument>>(
     quantity: Number,
     products: [
       {
+        _id: false,
         productId: { type: mongoose.Types.ObjectId, ref: 'Product' },
         optionId: mongoose.Types.ObjectId,
         quantity: Number
@@ -29,7 +24,6 @@ const schema = new mongoose.Schema<CartDocument, Model<CartDocument>>(
 );
 
 schema.pre<CartModel>('save', function (next) {
-  console.log('PreSave ............');
   let amount = 0;
   let quantity = 0;
 
@@ -44,4 +38,4 @@ schema.pre<CartModel>('save', function (next) {
   next();
 });
 
-export default mongoose.model('Cart', schema);
+export const CartModel = mongoose.model('Cart', schema);
