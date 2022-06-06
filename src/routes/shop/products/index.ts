@@ -12,6 +12,7 @@ const projection: PartialRecord<keyof Product, boolean> = {
   options: true
 };
 
+// GET /shop/products
 export const get: RequestHandler = async () => {
   await dbConnect();
 
