@@ -23,7 +23,9 @@ function createCartStore() {
   async function load(): Promise<void> {
     const cartId = LocalStorage.getItem(cartlsKey) as string;
 
-    if (!cartId) emptyState();
+    if (!cartId) {
+      return setEmptyState();
+    }
 
     try {
       const cart = await CartService.get(cartId);
@@ -33,14 +35,14 @@ function createCartStore() {
       if (error instanceof HttpError) {
         if (error.statusCode === StatusCodes.NOT_FOUND) {
           LocalStorage.removeItem(cartlsKey);
-          emptyState();
+          setEmptyState();
         }
       }
     }
   }
 
   async function addProduct(product: CartProduct): Promise<void> {
-    const cartId = LocalStorage.getItem(cartlsKey) as string;
+    const cartId = LocalStorage.getItem(cartlsKey);
 
     let cart: Cart;
 
@@ -56,20 +58,30 @@ function createCartStore() {
   }
 
   async function updateProduct(product: CartProduct): Promise<void> {
-    const cartId = LocalStorage.getItem(cartlsKey) as string;
+    const cartId = LocalStorage.getItem(cartlsKey);
+
+    if (!cartId) {
+      return setEmptyState();
+    }
+
     const cart = await CartService.updateProduct(cartId, product.id, product);
 
     set({ loaded: true, cart });
   }
 
   async function removeProduct(product: CartProduct): Promise<void> {
-    const cartId = LocalStorage.getItem(cartlsKey) as string;
+    const cartId = LocalStorage.getItem(cartlsKey);
+
+    if (!cartId) {
+      return setEmptyState();
+    }
+
     const cart = await CartService.removeProduct(cartId, product.id, product);
 
     set({ loaded: true, cart });
   }
 
-  function emptyState(): void {
+  function setEmptyState(): void {
     set({ ...defaultState, loaded: true });
   }
 

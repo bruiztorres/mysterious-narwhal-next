@@ -3,10 +3,12 @@ import mongoose, { type Types, type Document, type Model } from 'mongoose';
 import type { Modify, WithoutId } from '$lib/core/types';
 import type { Product, ProductOption } from './types';
 
-type ProductModel = Modify<WithoutId<Product>, {
-  options: Types.DocumentArray<ProductOption>;
-}>;
-
+type ProductModel = Modify<
+  WithoutId<Product>,
+  {
+    options: Types.DocumentArray<ProductOption>;
+  }
+>;
 
 export type ProductDocument = ProductModel & Document<string, unknown, ProductModel>;
 
