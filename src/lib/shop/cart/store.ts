@@ -4,9 +4,10 @@ import { StatusCodes } from 'http-status-codes';
 import { HttpError } from '$lib/core/http';
 import { CartService } from '$lib/shop/cart/service';
 import { LocalStorage } from '$lib/core/storage';
-import type { Cart, CartProduct, CartState } from './types';
+import type { Cart, CartProduct, CartState } from '$lib/shop/cart/types';
 
-const cartlsKey = 'mjdcartid';
+const LS_CART_KEY = 'mjdcartid';
+
 const defaultState: CartState = {
   loaded: false,
   cart: {
@@ -21,7 +22,7 @@ function createCartStore() {
   const { subscribe, set } = writable<CartState>(defaultState);
 
   async function load(): Promise<void> {
-    const cartId = LocalStorage.getItem(cartlsKey) as string;
+    const cartId = LocalStorage.getItem(LS_CART_KEY);
 
     if (!cartId) {
       return setEmptyState();
@@ -34,7 +35,7 @@ function createCartStore() {
     } catch (error) {
       if (error instanceof HttpError) {
         if (error.statusCode === StatusCodes.NOT_FOUND) {
-          LocalStorage.removeItem(cartlsKey);
+          LocalStorage.removeItem(LS_CART_KEY);
           setEmptyState();
         }
       }
@@ -42,23 +43,23 @@ function createCartStore() {
   }
 
   async function addProduct(product: CartProduct): Promise<void> {
-    const cartId = LocalStorage.getItem(cartlsKey);
+    const cartId = LocalStorage.getItem(LS_CART_KEY);
 
     let cart: Cart;
 
     if (cartId) {
-      cart = await CartService.addProduct(cartId, product.id, product);
+      cart = await CartService.addProduct(cartId, product);
     } else {
       cart = await CartService.create({ products: [product] });
 
-      LocalStorage.setItem(cartlsKey, cart.id);
+      LocalStorage.setItem(LS_CART_KEY, cart.id);
     }
 
     set({ loaded: true, cart });
   }
 
   async function updateProduct(product: CartProduct): Promise<void> {
-    const cartId = LocalStorage.getItem(cartlsKey);
+    const cartId = LocalStorage.getItem(LS_CART_KEY);
 
     if (!cartId) {
       return setEmptyState();
@@ -70,7 +71,7 @@ function createCartStore() {
   }
 
   async function removeProduct(product: CartProduct): Promise<void> {
-    const cartId = LocalStorage.getItem(cartlsKey);
+    const cartId = LocalStorage.getItem(LS_CART_KEY);
 
     if (!cartId) {
       return setEmptyState();
@@ -88,7 +89,6 @@ function createCartStore() {
   load();
 
   return {
-    load,
     subscribe,
     addProduct,
     updateProduct,
