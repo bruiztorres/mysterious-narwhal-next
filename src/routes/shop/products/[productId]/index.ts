@@ -14,11 +14,10 @@ const projection: PartialRecord<keyof Product, boolean> = {
   options: true
 };
 
-// GET /shop/products/[slug]
-export const get: RequestHandler = async ({ params }) => {
+// GET /shop/products/[productId]
+export const get: RequestHandler = async ({ params: { productId} }) => {
   await dbConnect();
 
-  const productId = params.slug;
   const doc = await ProductModel.findById(productId, projection);
 
   if (!doc) {
