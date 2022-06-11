@@ -15,7 +15,7 @@ const projection: PartialRecord<keyof Product, boolean> = {
 };
 
 // GET /shop/products/[productId]
-export const get: RequestHandler = async ({ params: { productId} }) => {
+export const get: RequestHandler = async ({ params: { productId } }) => {
   await dbConnect();
 
   const doc = await ProductModel.findById(productId, projection);
