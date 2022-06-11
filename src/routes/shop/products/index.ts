@@ -16,7 +16,11 @@ const projection: PartialRecord<keyof Product, boolean> = {
 export const get: RequestHandler = async () => {
   await dbConnect();
 
-  const docs = await ProductModel.find({}, projection);
+  const docs = await ProductModel.aggregate([
+    { $project: projection },
+    { $sort: { '_id': -1 } }
+  ]);
+
   const products = docs.map((product) => ProductMapper.toProductSlim(product));
 
   return { body: { products } };
