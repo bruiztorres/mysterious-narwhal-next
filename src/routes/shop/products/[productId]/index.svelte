@@ -7,6 +7,7 @@
   import LazyImage from '$lib/shared/lazy-image.svelte';
   import { AssetUrlResolver } from '$lib/core/asset';
   import { toCurrency } from '$lib/shop/utils';
+  import { cartStore } from '$lib/shop/cart/store';
   import ProductOptionControl from '$lib/shop/products/shared/option.svelte';
   import type { Product, ProductOption } from '$lib/shop/products/types';
   import type { ShopProductType, ShopProductVariant } from '$lib/shop/types';
@@ -20,26 +21,28 @@
   let selection: ProductSelection = { color: '', size: '' };
 
   $: loadOptions(product.options);
+  $: selectedOption = getOptionFromSelection(selection);
 
-  function getOptionFromSelection(
-    product: Product,
-    selection: ProductSelection
-  ): ProductOption | undefined {
+  function getOptionFromSelection(selection: ProductSelection): ProductOption {
     return product.options.find((option) => {
       return option.variants.every((variant) => {
         return selection[variant.kind] === variant.value;
       });
-    });
+    }) as ProductOption;
+  }
+
+  function isSameVariant(v1: ShopProductVariant, v2: ShopProductVariant) {
+    return v1.kind === v2.kind && v1.value === v2.value;
   }
 
   function loadOptions(options: ProductOption[]): void {
     const variants = options
       .map((option) => option.variants)
       .flat()
-      .filter((variant, index, self) => {
-        return (
-          self.findIndex((v) => v.kind === variant.kind && v.value === variant.value) === index
-        );
+      .filter((variant, i, self) => {
+        const index = self.findIndex((v) => isSameVariant(variant, v));
+
+        return i === index;
       });
 
     sizes = variants.filter((variant) => variant.kind === 'size');
@@ -49,24 +52,16 @@
     selection.color = colors[0]?.value;
   }
 
-  async function addToCart(product: Product, selection: ProductSelection): Promise<void> {
-    const option = getOptionFromSelection(product, selection);
-
-    /*     await cartStore.addProduct({
+  async function addToCart(): Promise<void> {
+    await cartStore.addProduct({
       id: product.id,
       name: product.name,
       thumbnailUrl: product.images[0],
-      optionId: option.id,
-      amount: option.amount,
-      quantity: 1,
-      variants: option.variants
-    }); */
-  }
-
-  function calcAmountFromSelection(product: Product, selection: ProductSelection): number {
-    const option = getOptionFromSelection(product, selection) ?? { amount: 0 };
-
-    return option.amount;
+      optionId: selectedOption.id,
+      amount: selectedOption.amount,
+      variants: selectedOption.variants,
+      quantity: 1
+    });
   }
 </script>
 
@@ -88,7 +83,7 @@
       {@html product.description}
     </section>
 
-    <form class="detail__section" on:submit|preventDefault={() => addToCart(product, selection)}>
+    <form class="detail__section" on:submit|preventDefault={addToCart}>
       {#if colors.length > 0}
         <h2 class="h5">Colors</h2>
 
@@ -122,13 +117,13 @@
 
       <div class="my-4">
         <span class="fs-3">
-          {toCurrency(calcAmountFromSelection(product, selection))}
+          {toCurrency(selectedOption.amount)}
         </span>
         <small class="fs-6 fw-normal">*VAT included</small>
       </div>
 
       <div class="options__submit d-grid">
-        <button class="btn btn-primary" disabled={!product.id}>Add to cart</button>
+        <button class="btn btn-primary" disabled={!$cartStore.loaded}> Add to cart </button>
       </div>
     </form>
   </div>
