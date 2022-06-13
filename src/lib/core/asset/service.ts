@@ -1,7 +1,7 @@
 type BlobContainer = 'content' | 'web';
 
 export class AssetUrlResolver {
-  private static cdnUrl = 'https://mysterious-narwhal-cdn.azureedge.net';
+  private static cdnUrl = '/images';
 
   private static resolver(container: BlobContainer, filename: string) {
     return `${this.cdnUrl}/${container}/${filename}`;
