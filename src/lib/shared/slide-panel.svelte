@@ -28,12 +28,14 @@
 </section>
 
 <style type="scss">
+  @use 'sass:math';
   @import 'bootstrap/scss/functions';
   @import 'bootstrap/scss/variables';
   @import 'bootstrap/scss/mixins';
   @import 'src/styles/abstracts/variables';
 
   $slide-panel-padding: 1.5rem;
+  $close-spacing: math.div($slide-panel-padding, 2);
 
   .slide-panel {
     background-color: $white;
@@ -48,17 +50,17 @@
 
     @include media-breakpoint-up(md) {
       box-shadow: -1px 0px 10px rgba(0, 0, 0, 0.1);
-      width: 35rem;
+      width: 30rem;
     }
 
     &__close {
       background-color: transparentize($white, 0.15);
       border-radius: 50%;
       color: $headings-color;
-      padding: $slide-panel-padding * 0.5;
+      padding: $close-spacing;
       position: absolute;
-      top: $slide-panel-padding * 0.5;
-      right: $slide-panel-padding * 0.5;
+      top: $close-spacing;
+      right: $close-spacing;
       z-index: 1;
     }
   }

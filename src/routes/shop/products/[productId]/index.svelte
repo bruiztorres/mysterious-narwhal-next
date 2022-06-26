@@ -130,6 +130,7 @@
 </Main>
 
 <style type="scss">
+  @use 'sass:math';
   @import 'bootstrap/scss/functions';
   @import 'bootstrap/scss/variables';
   @import 'bootstrap/scss/mixins';
@@ -153,7 +154,7 @@
       width: 40vh;
 
       &:not(:last-child) {
-        margin-right: $spacer * 0.25;
+        margin-right: math.div($spacer, 4);
       }
     }
   }
@@ -183,7 +184,7 @@
 
         &:not(:last-child) {
           margin-right: 0;
-          margin-bottom: $spacer * 0.5;
+          margin-bottom: math.div($spacer, 2);
         }
       }
     }
@@ -194,6 +195,6 @@
   }
 
   .product-options :global(.product-option + .product-option) {
-    padding-left: $spacer * 0.5;
+    padding-left: math.div($spacer, 2);
   }
 </style>

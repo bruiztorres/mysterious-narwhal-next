@@ -27,6 +27,7 @@
 </Main>
 
 <style type="scss">
+  @use 'sass:math';
   @import 'bootstrap/scss/functions';
   @import 'bootstrap/scss/variables';
   @import 'bootstrap/scss/mixins';
@@ -35,7 +36,7 @@
 
   .list {
     display: grid;
-    gap: $spacer * 0.5;
+    gap: math.div($spacer, 2);
     grid-template-columns: repeat(auto-fill, minmax($item-min-width, 1fr));
   }
 </style>

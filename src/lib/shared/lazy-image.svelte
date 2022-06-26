@@ -4,27 +4,25 @@
 </script>
 
 <div class="lazy-img">
-  <img {src} {alt} loading="lazy" class="img-fluid" />
+  <picture>
+    <source srcset={src} type="image/webp" />
+    <img {src} {alt} loading="lazy" class="img-fluid" />
+  </picture>
 </div>
 
 <style type="scss">
+  @use 'sass:math';
   @import 'bootstrap/scss/functions';
   @import 'bootstrap/scss/variables';
   @import 'src/styles/abstracts/variables';
 
   .lazy-img {
+    // https://en.wikipedia.org/wiki/Paper_size
+    $paper-aspect-ratio: math.div(1, math.sqrt(2));
+    aspect-ratio: $paper-aspect-ratio;
     background-color: $independence-lighter;
     border: 1px solid $independence-light;
-
     height: auto;
-    aspect-ratio: 3 / 4;
-    position: relative;
     overflow: hidden;
-
-    img {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
   }
 </style>
